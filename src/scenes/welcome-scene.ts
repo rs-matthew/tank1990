@@ -1,4 +1,5 @@
 import { GameProgress } from "../entities/game-progress";
+import Phaser from "phaser";
 
 export class WelcomeScene extends Phaser.Scene {
 
@@ -28,7 +29,7 @@ export class WelcomeScene extends Phaser.Scene {
   public create() {
     this.sound.play("welcome-music", { loop: false, volume: 0.5 });
     this.background = this.add.image(640, 0, "welcome-background").setOrigin(0.5, 0);
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard!.createCursorKeys();
 
     this.textStart = this.add.bitmapText(640, 432, "console-font", "PLEASE INSERT COIN", 24).setOrigin(0.5, 0.5);
     this.textStart.setTint(0xEEEEEE);
@@ -56,7 +57,7 @@ export class WelcomeScene extends Phaser.Scene {
     this.scene.start("StageNumberScene", this.gameProgress);
   }
 
-  public update(time): void {
+  public update(time: number): void {
     if (this.cursors.space.isDown) {
       this.nextScene();
     }

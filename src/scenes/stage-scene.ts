@@ -15,7 +15,7 @@ import { StateMachine } from "../scripting/state-machine";
 import { StateControlBullets } from "../state-control/state-bullets";
 import { StateControlEnemies } from "../state-control/state-enemies";
 import { StateControlPlayer } from "../state-control/state-player";
-
+import Phaser from "phaser";
 import VirtualJoystick from 'phaser3-rex-plugins/plugins/virtualjoystick.js';
 
 export class StageScene extends Phaser.Scene {
@@ -119,7 +119,7 @@ export class StageScene extends Phaser.Scene {
 
   public create(): void {
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard!.createCursorKeys();
     this.resetCursorKeys();
 
     this.background = this.add.image(640, 360, "game-background");
@@ -127,15 +127,20 @@ export class StageScene extends Phaser.Scene {
 
     const map = this.make.tilemap({ key: this.filesBaseKey + "-tilemap" });
     const tileSet = map.addTilesetImage("game-tileset", "game-tileset");
-    this.frameLayer = map.createLayer("frame-layer", tileSet, 0, 0);
+    //ts-ignore
+    if (!tileSet) {
+      throw new Error("Failed to load game-tileset");
+    }
+
+    this.frameLayer = map.createLayer("frame-layer", tileSet, 0, 0)!;
     this.frameLayer.setCollisionBetween(1, 9999, true, true);
-    this.gameLayer = map.createLayer("game-layer", tileSet, 0, 0);
+    this.gameLayer = map.createLayer("game-layer", tileSet, 0, 0)!;
     this.gameLayer.setCollisionBetween(1, 9999, true, true);
-    this.rockLayer = map.createLayer("rock-layer", tileSet, 0, 0);
+    this.rockLayer = map.createLayer("rock-layer", tileSet, 0, 0)!;
     this.rockLayer.setCollisionBetween(1, 9999, true, true);
-    this.waterLayer = map.createLayer("water-layer", tileSet, 0, 0);
+    this.waterLayer = map.createLayer("water-layer", tileSet, 0, 0)!;
     this.waterLayer.setCollisionBetween(1, 9999, true, true);
-    const aboveLayer = map.createLayer("above-layer", tileSet, 0, 0).setDepth(2);
+    const aboveLayer = (map.createLayer("above-layer", tileSet, 0, 0)!).setDepth(2);
 
     this.bulletsEnemies = this.physics.add.group();
     this.bulletsPlayer1 = this.physics.add.group();
@@ -165,7 +170,7 @@ export class StageScene extends Phaser.Scene {
     this.joyStick = new VirtualJoystick(this, {
       x: 120,
       y: 550,
-      radius: 80 ,
+      radius: 80,
       base: this.add.circle(0, 0, 80, 0x888888),
       thumb: this.add.circle(0, 0, 40, 0xcccccc),
       dir: '4dir',   // 'up&down'|0|'left&right'|1|'4dir'|2|'8dir'|3
@@ -186,6 +191,7 @@ export class StageScene extends Phaser.Scene {
     btnShooting.on('pointerup', () => {
       btnShooting.scale = 1.0;
     });
+
     // btnDown.on('pointerdown', () => {
     //   this.directionPlayer1 = Phaser.DOWN;
     // });
@@ -257,7 +263,7 @@ export class StageScene extends Phaser.Scene {
     }
   }
 
-  public update(time): void {
+  public update(time: number): void {
 
     if (this.player1.body === undefined) { return; }
 
@@ -272,14 +278,15 @@ export class StageScene extends Phaser.Scene {
       this.createBulletForPlayerOne();
     }
 
-    this.enemies.getChildren().forEach((element: Phaser.Physics.Arcade.Sprite) => {
+    this.enemies.getChildren().forEach((element) => {
+      const enemy = element as Phaser.Physics.Arcade.Sprite;
 
       const enemyName = element.getData("name").toString();
       const enemyMovement = StateMachine.getMovement(enemyName);
       const enemyShooting = StateMachine.getShooting(enemyName);
 
-      StateControlEnemies.processMovement(element, enemyMovement);
-      if (enemyShooting) { this.createBulletForEnemy(element); }
+      StateControlEnemies.processMovement(enemy, enemyMovement);
+      if (enemyShooting) { this.createBulletForEnemy(enemy); }
     });
 
     if (this.gameOver && !this.sceneEnding) { this.stageFailed(); }
@@ -329,11 +336,17 @@ export class StageScene extends Phaser.Scene {
     this.physics.add.collider(this.enemies, this.rockLayer);
     this.physics.add.collider(this.enemies, this.waterLayer);
 
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.rockLayer, this.collitionDestroyBullet, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.frameLayer, this.collitionDestroyBullet, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.gameLayer, this.collitionDestroyGameLayer, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.fortress, this.collitionDestroyFortress, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.enemies, this.collitionDestroyEnemy, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsPlayer1, this.bulletsEnemies, this.collitionDestroyBullets, null, this);
     // this.physics.add.collider(this.bulletsPlayer1, this.player2, this.collitionDestroyBullet, null, this);
 
@@ -345,10 +358,15 @@ export class StageScene extends Phaser.Scene {
     // this.physics.add.collider(this.bulletsPlayer2, this.enemies, this.collitionDestroyEnemy, null, this);
     // this.physics.add.collider(this.bulletsPlayer2, this.bulletsEnemies, this.collitionDestroyBullets, null, this);
 
+    //@ts-ignore
     this.physics.add.collider(this.bulletsEnemies, this.player1, this.collitionDestroyPlayer, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsEnemies, this.rockLayer, this.collitionDestroyBullet, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsEnemies, this.frameLayer, this.collitionDestroyBullet, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsEnemies, this.gameLayer, this.collitionDestroyGameLayer, null, this);
+    //@ts-ignore
     this.physics.add.collider(this.bulletsEnemies, this.fortress, this.collitionDestroyFortress, null, this);
     // this.physics.add.collider(this.bulletsEnemies, this.player2, this.collitionDestroyBullet, null, this); // to modifiy
   }
@@ -523,7 +541,7 @@ export class StageScene extends Phaser.Scene {
       this.gameProgress.playerOneHeaviesCount += 1;
     }
 
-    dst.body.enable = false;
+    dst.body!.enable = false;
     dst.setData("stop", true);
     dst.anims.play(anim, true);
 
@@ -597,7 +615,7 @@ export class StageScene extends Phaser.Scene {
   private collitionDestroyPlayer(src: Phaser.Physics.Arcade.Sprite, dst: Phaser.Physics.Arcade.Sprite): void {
 
     dst.anims.play("game-anim-bullet-explosion", true);
-    dst.body.enable = false;
+    dst.body!.enable = false;
     this.bulletsEnemies.remove(dst, true, true);
 
     this.gameProgress.playerOneLives -= 1;

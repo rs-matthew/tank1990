@@ -1,4 +1,5 @@
 import { GameProgress } from "../entities/game-progress";
+import Phaser from "phaser";
 
 export class ScoresScene extends Phaser.Scene {
 
@@ -88,7 +89,7 @@ export class ScoresScene extends Phaser.Scene {
     });
   }
 
-  public update(time): void {
+  public update(_time: number): void {
     // .
   }
 

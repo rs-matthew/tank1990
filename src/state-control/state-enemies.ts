@@ -1,4 +1,5 @@
 import { StateControlEnemy } from "../entities/state-control-enemy";
+import Phaser from "phaser";
 
 export class StateControlEnemies {
 
@@ -22,7 +23,7 @@ export class StateControlEnemies {
     if (stop) { return; }
 
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return; }
 
     enemy.setVelocity(0, 0);
     stateControlEnemy.setNewDirection(enemyMovement);
@@ -54,35 +55,35 @@ export class StateControlEnemies {
 
   public static getDirection(enemy: Phaser.Physics.Arcade.Sprite): number {
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return -1; }
 
     return stateControlEnemy.currentDirection;
   }
 
   public static isDirectionDown(enemy: Phaser.Physics.Arcade.Sprite): boolean {
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return false; }
 
     return (stateControlEnemy.currentDirection === Phaser.DOWN);
   }
 
   public static isDirectionLeft(enemy: Phaser.Physics.Arcade.Sprite): boolean {
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return false; }
 
     return (stateControlEnemy.currentDirection === Phaser.LEFT);
   }
 
   public static isDirectionRight(enemy: Phaser.Physics.Arcade.Sprite): boolean {
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return false; }
 
     return (stateControlEnemy.currentDirection === Phaser.RIGHT);
   }
 
   public static isDirectionUp(enemy: Phaser.Physics.Arcade.Sprite): boolean {
     const stateControlEnemy: StateControlEnemy = this.getStateControlEnemy(enemy);
-    if (stateControlEnemy === undefined) { return null; }
+    if (stateControlEnemy === undefined) { return false; }
 
     return (stateControlEnemy.currentDirection === Phaser.UP);
   }

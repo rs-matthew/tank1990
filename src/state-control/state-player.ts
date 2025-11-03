@@ -1,3 +1,5 @@
+import Phaser from "phaser";
+
 export class StateControlPlayer {
 
   public static PLAYER_SPEED: number = 160;
@@ -26,25 +28,25 @@ export class StateControlPlayer {
     // }
   }
 
-  public static processMovementKey(player: Phaser.Physics.Arcade.Sprite, number): void {
+  public static processMovementKey(player: Phaser.Physics.Arcade.Sprite, dir : number): void {
     player.setVelocity(0, 0);
 
-    if (number === Phaser.UP) {
+    if (dir === Phaser.UP) {
       this.setNewDirection(Phaser.UP);
       player.anims.play("game-anim-player01-up", true);
       player.setVelocity(0, -this.PLAYER_SPEED);
 
-    } else if (number === Phaser.RIGHT) {
+    } else if (dir === Phaser.RIGHT) {
       this.setNewDirection(Phaser.RIGHT);
       player.anims.play("game-anim-player01-right", true);
       player.setVelocity(this.PLAYER_SPEED, 0);
 
-    } else if (number === Phaser.DOWN) {
+    } else if (dir === Phaser.DOWN) {
       this.setNewDirection(Phaser.DOWN);
       player.anims.play("game-anim-player01-down", true);
       player.setVelocity(0, this.PLAYER_SPEED);
 
-    } else if (number === Phaser.LEFT) {
+    } else if (dir === Phaser.LEFT) {
       this.setNewDirection(Phaser.LEFT);
       player.anims.play("game-anim-player01-left", true);
       player.setVelocity(-this.PLAYER_SPEED, 0);
