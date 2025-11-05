@@ -87,6 +87,16 @@ export class StageScene extends Phaser.Scene {
     this.load.json(this.filesBaseKey + "-script", this.filesBaseUrl + "-script.json");
     this.load.image("game-tileset", "assets/images/tiles/game-tileset.png");
 
+    // Pad button images
+    this.load.image("left", "assets/images/pad/left.png");
+    this.load.image("right", "assets/images/pad/right.png");
+    this.load.image("up", "assets/images/pad/up.png");
+    this.load.image("down", "assets/images/pad/down.png");
+    this.load.image("circle", "assets/images/pad/circle.png");
+    this.load.image("square", "assets/images/pad/square.png");
+    this.load.image("triangle", "assets/images/pad/triangle.png");
+    this.load.image("x", "assets/images/pad/x.png");
+
     this.load.image("shooting", "assets/images/sprites/shooting.png");
     this.load.image("btnRight", "assets/images/sprites/right.png");
 
