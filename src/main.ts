@@ -26,7 +26,8 @@ const defaultConfig: Phaser.Types.Core.GameConfig = {
   },
   scale: {
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.NO_CENTER,
+    // mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   render: { pixelArt: true, antialias: false },
   scene: [WelcomeScene, GameOverScene, ScoresScene, StageScene, StageNumberScene],
@@ -37,12 +38,12 @@ const defaultConfig: Phaser.Types.Core.GameConfig = {
 };
 const StartGame = (parent: string) => {
 
-    return new Phaser.Game({ ...defaultConfig, parent });
+  return new Phaser.Game({ ...defaultConfig, parent });
 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    StartGame('game-container');
+  StartGame('game-container');
 
 });
