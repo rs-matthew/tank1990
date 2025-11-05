@@ -240,38 +240,64 @@ export class StageScene extends Phaser.Scene {
     //   // enable: true
     // }).on('update', this.dumpJoyStickState, this);
 
-    // let btnDown = this.add.image(-100, 600, "down").setInteractive();
-    // let btnUp = this.add.image(-100, 500, "up").setInteractive();
-    // let btnLeft = this.add.image(-150, 550, "left").setInteractive();
-    // let btnRight = this.add.image(- 50, 550, "right").setInteractive();
+    // Directional pad buttons (left side, bottom of screen)
+    const padX = 120;
+    const padY = 1180;
+    const padSpacing = 80;
+    
+    let btnDown = this.add.image(padX, padY + padSpacing, "down").setInteractive().setDepth(10).setAlpha(0.7);
+    let btnUp = this.add.image(padX, padY - padSpacing, "up").setInteractive().setDepth(10).setAlpha(0.7);
+    let btnLeft = this.add.image(padX - padSpacing, padY, "left").setInteractive().setDepth(10).setAlpha(0.7);
+    let btnRight = this.add.image(padX + padSpacing, padY, "right").setInteractive().setDepth(10).setAlpha(0.7);
 
+    // Shoot button (right side, bottom of screen)
+    let btnShoot = this.add.image(600, 1200, "circle").setInteractive().setDepth(10).setAlpha(0.7);
+    btnShoot.setScale(1.2);
 
-    // btnDown.on('pointerdown', () => {
-    //   this.directionPlayer1 = Phaser.DOWN;
-    // });
-    // btnUp.on('pointerdown', () => {
-    //   this.directionPlayer1 = Phaser.UP;
-    // });
-    // btnLeft.on('pointerdown', () => {
-    //   this.directionPlayer1 = Phaser.LEFT;
-    // });
-    // btnRight.on('pointerdown', () => {
-    //   this.directionPlayer1 = Phaser.RIGHT;
-    // });
+    // Directional pad handlers
+    btnDown.on('pointerdown', () => {
+      this.directionPlayer1 = Phaser.DOWN;
+      btnDown.setAlpha(1.0);
+    });
+    btnUp.on('pointerdown', () => {
+      this.directionPlayer1 = Phaser.UP;
+      btnUp.setAlpha(1.0);
+    });
+    btnLeft.on('pointerdown', () => {
+      this.directionPlayer1 = Phaser.LEFT;
+      btnLeft.setAlpha(1.0);
+    });
+    btnRight.on('pointerdown', () => {
+      this.directionPlayer1 = Phaser.RIGHT;
+      btnRight.setAlpha(1.0);
+    });
 
+    // Release handlers
+    btnDown.on('pointerup', () => {
+      this.directionPlayer1 = -1;
+      btnDown.setAlpha(0.7);
+    });
+    btnUp.on('pointerup', () => {
+      this.directionPlayer1 = -1;
+      btnUp.setAlpha(0.7);
+    });
+    btnLeft.on('pointerup', () => {
+      this.directionPlayer1 = -1;
+      btnLeft.setAlpha(0.7);
+    });
+    btnRight.on('pointerup', () => {
+      this.directionPlayer1 = -1;
+      btnRight.setAlpha(0.7);
+    });
 
-    // btnDown.on('pointerup', () => {
-    //   this.directionPlayer1 = -1;
-    // });
-    // btnUp.on('pointerup', () => {
-    //   this.directionPlayer1 = -1;
-    // });
-    // btnLeft.on('pointerup', () => {
-    //   this.directionPlayer1 = -1;
-    // });
-    // btnRight.on('pointerup', () => {
-    //   this.directionPlayer1 = -1;
-    // });
+    // Shoot button handler
+    btnShoot.on('pointerdown', () => {
+      btnShoot.setAlpha(1.0);
+      this.createBulletForPlayerOne();
+    });
+    btnShoot.on('pointerup', () => {
+      btnShoot.setAlpha(0.7);
+    });
 
     // Create GAME OVER logo but hide it initially
     this.logoGameOver = this.add.image(360, 640, "game-game-over").setDepth(3);
