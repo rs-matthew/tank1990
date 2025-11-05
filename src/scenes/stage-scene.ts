@@ -134,7 +134,7 @@ export class StageScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.sound.play("background", { loop: true, volume: 0.5 });
+    // this.sound.play("background", { loop: true, volume: 0.5 });
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.resetCursorKeys();
 
@@ -483,7 +483,7 @@ export class StageScene extends Phaser.Scene {
   }
 
   private createBulletForPlayerOne() {
-    this.sound.play("bullet_shot");
+    // this.sound.play("bullet_shot");
 
     if (this.isShootingPlayer1) { return; }
     this.isShootingPlayer1 = true;
@@ -603,7 +603,7 @@ export class StageScene extends Phaser.Scene {
   private collitionDestroyBullet(src: Phaser.Physics.Arcade.Sprite, dst: Phaser.Physics.Arcade.Sprite): void {
 
     if (src.getData !== undefined) {
-      this.sound.play("explosion_1");
+      // this.sound.play("explosion_1");
 
       src.anims.play("game-anim-bullet-explosion", true);
       // StateControlBullets.unregister(src.getData("name"), src.getData("key"));
@@ -617,7 +617,7 @@ export class StageScene extends Phaser.Scene {
     }
 
     if (dst.getData !== undefined) {
-      this.sound.play("explosion_1");
+      // this.sound.play("explosion_1");
 
       dst.anims.play("game-anim-bullet-explosion", true);
       // StateControlBullets.unregister(dst.getData("name"), dst.getData("key"));
@@ -637,7 +637,7 @@ export class StageScene extends Phaser.Scene {
   }
 
   private collitionDestroyEnemy(src: Phaser.Physics.Arcade.Sprite, dst: Phaser.Physics.Arcade.Sprite): void {
-    this.sound.play("explosion_2");
+    // this.sound.play("explosion_2");
     src.anims.play("game-anim-bullet-explosion", true);
     this.time.delayedCall(150, () => {
       this.bulletsPlayer1.remove(src, true, true);
