@@ -1,9 +1,10 @@
 import { StateControlEnemies } from "../state-control/state-enemies";
 import { StateMachine } from "./state-machine";
+import { StageScene } from "../scenes/stage-scene";
 
 export class ScriptManager {
 
-  public static  parse(scene: Phaser.Scene, enemies: Phaser.Physics.Arcade.Group, dataJSON: string, callback?: (args: any) => void, callbackContext?: any) {
+  public static parse(scene: StageScene, enemies: Phaser.Physics.Arcade.Group, dataJSON: string, callback?: (args: any) => void, callbackContext?: any) {
 
     const JSON_KEY_ENEMIES: string = "enemies";
     const JSON_KEY_NAME: string = "name";
@@ -20,6 +21,7 @@ export class ScriptManager {
     this.spawnPointCenter = scene.add.sprite(this.getPosX("center"), SPAWN_Y, "game-spawn-point");
     this.spawnPointRight = scene.add.sprite(this.getPosX("right"), SPAWN_Y, "game-spawn-point");
 
+    //@ts-ignore
     const enemiesJSON = dataJSON[JSON_KEY_ENEMIES];
 
     enemiesJSON.forEach((element: any) => {
@@ -46,6 +48,7 @@ export class ScriptManager {
           enemy.setImmovable(false);
           enemy.setPushable(false);
           enemy.setBodySize(48, 48);
+          scene.physics.add.collider(enemy, enemies);
 
           StateMachine.register(element[JSON_KEY_NAME]);
           StateControlEnemies.register(element[JSON_KEY_NAME]);
@@ -60,28 +63,28 @@ export class ScriptManager {
   private static spawnPointCenter: Phaser.GameObjects.Sprite;
   private static spawnPointRight: Phaser.GameObjects.Sprite;
 
+  //@ts-ignore
   private static selectSpawnPoint(spawn: string): Phaser.GameObjects.Sprite {
-
     spawn = spawn.toLowerCase();
-    if (spawn === "left")   { return this.spawnPointLeft; }
+    if (spawn === "left") { return this.spawnPointLeft; }
     if (spawn === "center") { return this.spawnPointCenter; }
-    if (spawn === "right")  { return this.spawnPointRight; }
+    if (spawn === "right") { return this.spawnPointRight; }
   }
 
+  //@ts-ignore
   private static getPosX(spawn: string): number {
-
     const SPAWN_X_LEFT = 72;
     const SPAWN_X_CENTER = 360;
     const SPAWN_X_RIGHT = 648;
 
     spawn = spawn.toLowerCase();
-    if (spawn === "left")   { return SPAWN_X_LEFT; }
+    if (spawn === "left") { return SPAWN_X_LEFT; }
     if (spawn === "center") { return SPAWN_X_CENTER; }
-    if (spawn === "right")  { return SPAWN_X_RIGHT; }
+    if (spawn === "right") { return SPAWN_X_RIGHT; }
   }
 
+  //@ts-ignore
   private static getSpriteKey(type: string): string {
-
     const SPRITE_KEY_REGULAR: string = "game-enemy-regular";
     const SPRITE_KEY_SPEEDY: string = "game-enemy-speedy";
     const SPRITE_KEY_SHOOTER: string = "game-enemy-shooter";
@@ -89,8 +92,8 @@ export class ScriptManager {
 
     type = type.toLowerCase();
     if (type === "regular") { return SPRITE_KEY_REGULAR; }
-    if (type === "speedy")  { return SPRITE_KEY_SPEEDY; }
+    if (type === "speedy") { return SPRITE_KEY_SPEEDY; }
     if (type === "shooter") { return SPRITE_KEY_SHOOTER; }
-    if (type === "heavy")   { return SPRITE_KEY_HEAVY; }
+    if (type === "heavy") { return SPRITE_KEY_HEAVY; }
   }
 }

@@ -46,6 +46,7 @@ export class StageScene extends Phaser.Scene {
   private player1: Phaser.Physics.Arcade.Sprite;
   // private player2: Phaser.Physics.Arcade.Sprite;
 
+  private isShootingPlayer1: boolean;
   private directionPlayer1: number;
   private gameProgress: GameProgress;
 
@@ -71,6 +72,7 @@ export class StageScene extends Phaser.Scene {
     this.gameOver = false;
     this.stageCompleted = false;
     this.sceneEnding = false;
+    this.isShootingPlayer1 = false;
   }
 
   public preload(): void {
@@ -111,6 +113,7 @@ export class StageScene extends Phaser.Scene {
     this.load.audio("bullet_hit_1", "assets/sound/bullet_hit_1.ogg");
     this.load.audio("explosion_1", "assets/sound/explosion_1.ogg");
     this.load.audio("explosion_2", "assets/sound/explosion_2.ogg");
+    this.load.audio("background", "assets/sound/background.mp3");
 
     // var url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
     // this.load.plugin('rexvirtualjoystickplugin', url, true);
@@ -119,7 +122,7 @@ export class StageScene extends Phaser.Scene {
   }
 
   public create(): void {
-
+    this.sound.play("background", { loop: true, volume: 0.5 });
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.resetCursorKeys();
 
@@ -194,7 +197,7 @@ export class StageScene extends Phaser.Scene {
     // let btnUp = this.add.image(-100, 500, "up").setInteractive();
     // let btnLeft = this.add.image(-150, 550, "left").setInteractive();
     // let btnRight = this.add.image(- 50, 550, "right").setInteractive();
-    
+
 
     // btnDown.on('pointerdown', () => {
     //   this.directionPlayer1 = Phaser.DOWN;
@@ -284,7 +287,7 @@ export class StageScene extends Phaser.Scene {
 
     this.enemies.getChildren().forEach((element) => {
       const enemy = element as Phaser.Physics.Arcade.Sprite;
-
+      enemy.setData("shooting", false);
       const enemyName = element.getData("name").toString();
       const enemyMovement = StateMachine.getMovement(enemyName);
       const enemyShooting = StateMachine.getShooting(enemyName);
@@ -378,10 +381,11 @@ export class StageScene extends Phaser.Scene {
   private createBulletForPlayerOne() {
     this.sound.play("bullet_shot");
 
-    if (this.bulletsPlayer1.getLength() > 1) { return; }
-    // if (this.bulletsPlayer1.getLength() > 0) { return; }
-    const BULLET_SPEED = 360;
-    const BULLET_DELTA = 24 - 1; // -1 for tiles coordinates
+    if (this.isShootingPlayer1) { return; }
+    this.isShootingPlayer1 = true;
+
+    const BULLET_SPEED = 320;
+    const BULLET_DELTA = 12; // -1 for tiles coordinates
 
     let anim: string = "";
     let posX: number = 0;
@@ -427,18 +431,20 @@ export class StageScene extends Phaser.Scene {
     bullet.setCollideWorldBounds(true);
     bullet.setVelocity(velX, velY);
     bullet.anims.play(anim, true);
+    this.time.delayedCall(300, () => { this.isShootingPlayer1 = false; });
 
     const bulletDirection = StateControlPlayer.getDirection();
     StateControlBullets.register(bullet.getData("name"), bullet.getData("key"), bulletDirection);
   }
 
   private createBulletForEnemy(enemy: Phaser.Physics.Arcade.Sprite) {
+    // this.sound.play("bullet_shot");
+    if (enemy.getData("shooting")) { return; }
+    enemy.setData("shooting", true);
+    this.time.delayedCall(1000, () => { enemy.setData("shooting", false); });
 
-    // if (this.bulletsEnemies.getLength() > 0) { return; }
-    // ToDo: Limitar a 1 disparo a la vez por enemigo
-
-    const BULLET_SPEED = 360;
-    const BULLET_DELTA = 24 - 1; // -1 for tiles coordinates
+    const BULLET_SPEED = 320;
+    const BULLET_DELTA = 12; // -1 for tiles coordinates
 
     let anim: string = "";
     let posX: number = 0;
@@ -488,6 +494,7 @@ export class StageScene extends Phaser.Scene {
     const bulletDirection = StateControlEnemies.getDirection(enemy);
     StateControlBullets.register(bullet.getData("name"), bullet.getData("key"), bulletDirection);
   }
+
 
   private collitionDestroyBullet(src: Phaser.Physics.Arcade.Sprite, dst: Phaser.Physics.Arcade.Sprite): void {
 

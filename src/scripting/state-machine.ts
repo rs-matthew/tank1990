@@ -26,7 +26,7 @@ export class StateMachine {
   public static getMovement(key: string): number {
 
     const stateMachineEnemy = this.stateMachineEnemies.filter((a) => a.key === key)[0];
-    if (stateMachineEnemy === undefined) { return null; }
+    if (stateMachineEnemy === undefined) { return -1; }
 
     stateMachineEnemy.movementCounter += 1;
     if (stateMachineEnemy.movementCounter === stateMachineEnemy.movementThreshold) {
@@ -41,7 +41,7 @@ export class StateMachine {
   public static getShooting(key: string): boolean {
 
     const stateMachineEnemy = this.stateMachineEnemies.filter((a) => a.key === key)[0];
-    if (stateMachineEnemy === undefined) { return null; }
+    if (stateMachineEnemy === undefined) { return false; }
 
     stateMachineEnemy.shootingCounter += 1;
     if (stateMachineEnemy.shootingCounter === stateMachineEnemy.shootingThreshold) {

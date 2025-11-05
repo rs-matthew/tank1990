@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 export class StateControlPlayer {
 
-  public static PLAYER_SPEED: number = 160;
+  public static PLAYER_SPEED: number = 120;
 
   public static currentDirection: number;
   public static previousDirection: number;
@@ -19,13 +19,6 @@ export class StateControlPlayer {
     } else if (cursors.left.isDown) {
       this.processMovementKey(player, Phaser.LEFT);
     }
-
-    // align to grid on direction change
-    // if (this.currentDirection !== this.previousDirection) {
-    //   const newPosX = Phaser.Math.Snap.To(player.x, 24);
-    //   const newPosY = Phaser.Math.Snap.To(player.y, 24);
-    //   player.setPosition(newPosX, newPosY);
-    // }
   }
 
   public static processMovementKey(player: Phaser.Physics.Arcade.Sprite, dir : number): void {
@@ -51,11 +44,8 @@ export class StateControlPlayer {
       player.anims.play("game-anim-player01-left", true);
       player.setVelocity(-this.PLAYER_SPEED, 0);
     }
-
     // align to grid on direction change
     if (this.currentDirection !== this.previousDirection) {
-      // const newPosX = Phaser.Math.Snap.To(player.x, 24);
-      // const newPosY = Phaser.Math.Snap.To(player.y, 24);
       const newPosX = Phaser.Math.Snap.To(player.x, 12);
       const newPosY = Phaser.Math.Snap.To(player.y, 12);
       player.setPosition(newPosX, newPosY);
